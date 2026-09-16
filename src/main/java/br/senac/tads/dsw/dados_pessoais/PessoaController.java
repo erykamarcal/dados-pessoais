@@ -1,12 +1,14 @@
 package br.senac.tads.dsw.dados_pessoais;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import jakarta.validation.Valid;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,5 +38,20 @@ public class PessoaController {
 		}
 		return optPessoa.get();
 	}
+
+	@PostMapping ("/sem-validacao")
+	public ResponseEntity<?> incluirNovo(@RequestBody Pessoa pessoa){
+		pessoaService.incluirNovaPessoa(pessoa);
+		URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/pessoas/{username}").buildAndExpand(pessoa.getUsername()).toUri();
+
+		return ResponseEntity.created(location).build();
+	}
+
+	@PostMapping
+	public ResponseEntity<?> incluirNovoComValidacao(@RequestBody @Valid Pessoa pessoa){
+		pessoaService.incluirNovaPessoa(pessoa);
+		URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/pessoas/{username}").buildAndExpand(pessoa.getUsername()).toUri();
+
+		return ResponseEntity.created(location).build();
 
 }
