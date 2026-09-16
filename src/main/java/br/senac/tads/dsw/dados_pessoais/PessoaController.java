@@ -25,22 +25,22 @@ public class PessoaController {
 	}
 
 	@GetMapping
-	public List<Pessoa> obterPessoas(){
+	public List<Pessoa> obterPessoas() {
 		return pessoaService.obterPessoas();
 	}
 
-	@GetMapping ("/{username}")
+	@GetMapping("/{username}")
 
-	public Pessoa obterPessoa(@PathVariable ("username") String usernane) {
+	public Pessoa obterPessoa(@PathVariable("username") String usernane) {
 		Optional<Pessoa> optPessoa = pessoaService.obterPessoa(usernane);
-		if (optPessoa.isEmpty()){
+		if (optPessoa.isEmpty()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 		}
 		return optPessoa.get();
 	}
 
-	@PostMapping ("/sem-validacao")
-	public ResponseEntity<?> incluirNovo(@RequestBody Pessoa pessoa){
+	@PostMapping("/sem-validacao")
+	public ResponseEntity<?> incluirNovo(@RequestBody Pessoa pessoa) {
 		pessoaService.incluirNovaPessoa(pessoa);
 		URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/pessoas/{username}").buildAndExpand(pessoa.getUsername()).toUri();
 
@@ -48,10 +48,11 @@ public class PessoaController {
 	}
 
 	@PostMapping
-	public ResponseEntity<?> incluirNovoComValidacao(@RequestBody @Valid Pessoa pessoa){
+	public ResponseEntity<?> incluirNovoComValidacao(@RequestBody @Valid Pessoa pessoa) {
 		pessoaService.incluirNovaPessoa(pessoa);
 		URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/pessoas/{username}").buildAndExpand(pessoa.getUsername()).toUri();
 
 		return ResponseEntity.created(location).build();
 
+	}
 }
