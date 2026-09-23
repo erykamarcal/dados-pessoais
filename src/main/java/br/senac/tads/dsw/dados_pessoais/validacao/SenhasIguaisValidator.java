@@ -1,12 +1,12 @@
 package br.senac.tads.dsw.dados_pessoais.validacao;
 
-import br.senac.tads.dsw.dados_pessoais.Pessoa;
+import br.senac.tads.dsw.dados_pessoais.PessoaDto;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.stereotype.Component;
 
 @Component
-public class SenhasIguaisValidator implements ConstraintValidator<SenhasIguais, Pessoa> {
+public class SenhasIguaisValidator implements ConstraintValidator<SenhasIguais, PessoaDto> {
 
 	private  String mensagem;
 
@@ -17,7 +17,7 @@ public class SenhasIguaisValidator implements ConstraintValidator<SenhasIguais, 
 	}
 
 	@Override
-	public boolean isValid(Pessoa pessoa, ConstraintValidatorContext context) {
+	public boolean isValid(PessoaDto pessoa, ConstraintValidatorContext context) {
 		boolean resultado = pessoa.getSenha() != null &&
 			pessoa.getSenha().equals(pessoa.getSenhaRepeticao());
 
