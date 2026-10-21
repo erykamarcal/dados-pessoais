@@ -21,7 +21,6 @@ public class PessoaController {
 
 	private final PessoaService pessoaService;
 
-
 	public PessoaController(PessoaService pessoaService) {
 		this.pessoaService = pessoaService;
 	}
