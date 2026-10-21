@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
@@ -30,6 +29,11 @@ public class PessoaController {
 		return pessoaService.obterPessoas();
 	}
 
+	@GetMapping("/busca")
+	public ResponseEntity<List<PessoaDto>> buscarPessoas(@RequestParam("q") String termo) {
+		return ResponseEntity.ok(pessoaService.buscarPessoas(termo));
+	}
+
 	@GetMapping("/{username}")
 
 	public PessoaDto obterPessoa(@PathVariable("username") String usernane) {
@@ -43,7 +47,8 @@ public class PessoaController {
 	@PostMapping("/sem-validacao")
 	public ResponseEntity<?> incluirNovo(@RequestBody PessoaDto pessoaDto) {
 		pessoaService.incluirNovaPessoa(pessoaDto);
-		URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/pessoas/{username}").buildAndExpand(pessoaDto.getUsername()).toUri();
+		URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/pessoas/{username}")
+				.buildAndExpand(pessoaDto.getUsername()).toUri();
 
 		return ResponseEntity.created(location).build();
 	}
@@ -51,14 +56,15 @@ public class PessoaController {
 	@PostMapping
 	public ResponseEntity<?> incluirNovoComValidacao(@RequestBody @Valid PessoaDto pessoaDto) {
 		pessoaService.incluirNovaPessoa(pessoaDto);
-		URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/pessoas/{username}").buildAndExpand(pessoaDto.getUsername()).toUri();
+		URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/pessoas/{username}")
+				.buildAndExpand(pessoaDto.getUsername()).toUri();
 
 		return ResponseEntity.created(location).build();
 	}
 
 	@PutMapping("/{username}")
 	public ResponseEntity<?> atualizar(@PathVariable("username") String username,
-									   @RequestBody @Valid PessoaAlteracaoDto pessoa) {
+			@RequestBody @Valid PessoaAlteracaoDto pessoa) {
 		PessoaDto pessoaDtoAlterada = pessoaService.alterarPessoa(username, pessoa);
 		return ResponseEntity.ok().body(pessoaDtoAlterada);
 	}
@@ -72,7 +78,8 @@ public class PessoaController {
 	@ExceptionHandler(NaoEncontradoException.class)
 	public ResponseEntity<ProblemDetail> tratarExcecao(NaoEncontradoException ex) {
 		ProblemDetail pd = ProblemDetail.forStatusAndDetail(
-			HttpStatusCode.valueOf(404), ex.getMessage());
+				HttpStatusCode.valueOf(404), ex.getMessage());
 		return ResponseEntity.of(pd).build();
 	}
+
 }
