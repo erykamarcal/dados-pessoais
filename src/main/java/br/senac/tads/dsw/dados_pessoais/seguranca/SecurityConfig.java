@@ -13,6 +13,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -21,7 +26,9 @@ public class SecurityConfig {
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-		http.csrf(crsf -> crsf.disable())
+		http
+			.cors(cors -> cors.configurationSource(corsConfigurationSource()))
+			.csrf(csrf -> csrf.disable())
 			.headers(headers -> headers.frameOptions(frame -> frame.disable()))
 			.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 			.authorizeHttpRequests(auth -> auth
@@ -46,6 +53,24 @@ public class SecurityConfig {
 	@SuppressWarnings("deprecation")
 	public PasswordEncoder passwordEncoder(){
 		return NoOpPasswordEncoder.getInstance();
+	}
+
+	@Bean
+	public CorsConfigurationSource corsConfigurationSource() {
+		CorsConfiguration config = new CorsConfiguration();
+
+		// Origens permitidas - substitua pela URL real do frontend em produção
+		config.setAllowedOrigins(List.of("http://localhost:3000", "https://meu-frontend.com"));
+
+		// Métodos HTTP que o cliente pode usar
+		config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+
+		// Headers que o cliente pode enviar - "Authorization" é necessário para o Bearer token
+		config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		source.registerCorsConfiguration("/**", config);  // aplica a todos os caminhos
+		return source;
 	}
 
 }
