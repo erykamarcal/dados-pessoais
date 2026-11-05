@@ -36,9 +36,8 @@ public class SecurityConfig {
 				.permitAll()
 				.requestMatchers("/me").authenticated()
 				.requestMatchers("/*.html", "/*.css", "/*.js").permitAll()
-				.anyRequest().authenticated()
+				.anyRequest().authenticated() // LEMBRAR DE MANTER ESTA LINHA NO FINAL
 			)
-
 			.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 		return http.build();
 	}
