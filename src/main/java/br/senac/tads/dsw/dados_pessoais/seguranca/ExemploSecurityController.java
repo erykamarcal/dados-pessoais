@@ -20,5 +20,30 @@ public class ExemploSecurityController {
 		String username = (String) auth.getPrincipal();
 		return (UsuarioSistema) userDetailsService.loadUserByUsername(username);
 	}
+
+	public record MensagemRoleDto(String usuario, String menssagem){}
+
+	@GetMapping("/acesso/admin")
+	public MensagemRoleDto mensagemAdmin (Authentication auth){
+	return new MensagemRoleDto(
+		(String)  auth.getPrincipal(), "Mensagem para usuário com Role ADMIN"
+	);
+	}
+
+	@GetMapping("/acesso/gerente")
+	public MensagemRoleDto mensagemGerente (Authentication auth){
+		return new MensagemRoleDto(
+			(String)  auth.getPrincipal(), "Mensagem para usuário com Role GERENTE"
+		);
+	}
+
+	@GetMapping("/acesso/user")
+	public MensagemRoleDto mensagemUser (Authentication auth){
+		return new MensagemRoleDto(
+			(String)  auth.getPrincipal(), "Mensagem para usuário com Role USER"
+		);
+	}
+
 }
+
 
