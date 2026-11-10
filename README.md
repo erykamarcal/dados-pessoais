@@ -1,6 +1,7 @@
 # dados-pessoais
 
 Projeto desenvolvido em **Spring Boot** para criação de uma API REST de gerenciamento de dados pessoais.
+Disciplina: Desenvolvimento de Sistema Web
 
 ## 🛠️ Tecnologias
 
