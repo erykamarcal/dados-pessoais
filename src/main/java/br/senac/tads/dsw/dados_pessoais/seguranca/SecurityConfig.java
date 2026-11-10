@@ -20,9 +20,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
 	private final JwtFilter jwtFilter;
+
 	public SecurityConfig(JwtFilter jwtFilter) {
 		this.jwtFilter = jwtFilter;
 	}
+
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http
@@ -38,7 +40,11 @@ public class SecurityConfig {
 				.permitAll()
 				.requestMatchers("/me").authenticated()
 				.requestMatchers("/*.html", "/*.css", "/*.js").permitAll()
-				.anyRequest().authenticated() // LEMBRAR DE MANTER ESTA LINHA NO FINAL
+					.requestMatchers(HttpMethod.GET, "/pessoas", "/pessoas/**").permitAll()
+					.requestMatchers(HttpMethod.POST, "/pessoas", "/pessoas/**").authenticated()
+					.requestMatchers(HttpMethod.PUT, "/pessoas/**").authenticated()
+					.requestMatchers(HttpMethod.DELETE, "/pessoas/**").authenticated()
+					.anyRequest().authenticated() // LEMBRAR DE MANTER ESTA LINHA NO FINAL
 			)
 			.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 		return http.build();
@@ -52,7 +58,6 @@ public class SecurityConfig {
 		return new ProviderManager(provider);
 	}
 	@Bean
-	@SuppressWarnings("deprecation")
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}

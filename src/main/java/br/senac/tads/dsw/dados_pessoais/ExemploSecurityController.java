@@ -1,5 +1,6 @@
-package br.senac.tads.dsw.dados_pessoais.seguranca;
+package br.senac.tads.dsw.dados_pessoais;
 
+import br.senac.tads.dsw.dados_pessoais.seguranca.UsuarioSistema;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -22,7 +23,7 @@ public class ExemploSecurityController {
 		return (UsuarioSistema) userDetailsService.loadUserByUsername(username);
 	}
 
-	public record MensagemRoleDto(String usuario, String menssagem){}
+	public record MensagemRoleDto(String usuario, String mensagem){}
 
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/acesso/admin")
@@ -47,7 +48,6 @@ public class ExemploSecurityController {
 			(String)  auth.getPrincipal(), "Mensagem para usuário com Role USER"
 		);
 	}
-
 }
 
 

@@ -136,10 +136,31 @@
       document.getElementById('statusLogin').textContent = '';
     }
   }
+
+  function base64UrlDecode(str) {
+    str = str.replace(/-/g, '+').replace(/_/g, '/');
+    while (str.length % 4 !== 0) str += '='; // padding obrigatório no Base64 padrão
+    return JSON.parse(atob(str));
+  }
+
   function exibirSecaoLogado(token) {
     document.getElementById('tokenTexto').textContent = token;
     document.getElementById('secaoLogado').classList.remove('oculto');
     document.getElementById('resultadoMe').classList.add('oculto');
+    try {
+      const partes = token.split('.');
+      const payload = base64UrlDecode(partes[1]);
+      const roles = payload.roles ?? [];
+      // Oculta os botões para os quais o usuário não tem a role correspondente
+      document.getElementById('btnAdmin').style.display =
+        roles.includes('ROLE_ADMIN') ? '' : 'none';
+      document.getElementById('btnGerente').style.display =
+        roles.includes('ROLE_GERENTE') ? '' : 'none';
+      document.getElementById('btnUser').style.display =
+        roles.includes('ROLE_USER') ? '' : 'none';
+    } catch (e) {
+      // Token malformado — mantém todos os botões visíveis
+    }
   }
   // ============================================================
   // ENDPOINT /me — resultado exibido no corpo da página
